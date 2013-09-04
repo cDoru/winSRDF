@@ -138,6 +138,9 @@
     <ClCompile Include="cConStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cPDFFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\Connections\Connections.h">

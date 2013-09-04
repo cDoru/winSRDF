@@ -22,6 +22,8 @@
 #include "pe.h"
 #include "elf.h"
 #include "hPackets.h"
+#include <regex>
+
 //#include "tib.h"
 
 using namespace Security::Elements::String;
@@ -187,7 +189,6 @@ public:
 // ELF Parser
 //----------
 
-/* elf parser */
 struct SECTIONS 
 {
 	char* Name;
@@ -272,6 +273,72 @@ public:
 	DWORD OffsetToRVA(DWORD RawOffset);
 
 };
+
+//--------------------------------------------------------------
+// PDF Parser
+//----------
+
+struct object{
+    int offset;
+    vector<string> data;
+    vector<string> streams;
+};   
+
+struct xref_item{
+    string name;
+    int start;
+    int end;
+    int offset;
+    int revision_no;
+    char marker;
+};
+    
+struct xref
+{
+    string name;// = "xref";
+    int start;
+    int end;
+    vector<xref_item> xref_table;
+};
+struct trailer
+{
+   vector<string> trailer_data;
+};
+class DLLIMPORT Security::Targets::Files::cPDFFile : public Security::Targets::Files::cFile
+{
+private:
+   
+	//xref_item xref_list;
+	bool FileLoaded;
+
+	//Functions:
+	bool ParsePDF();
+	bool get_version_pdf();
+	bool get_objects_pdf();
+	//bool get_object(int offset, vector<string> &v);
+	bool get_object(int offset, object &o);
+	DWORD getline(DWORD NewAddress, string& line);
+	DWORD GetValue(char* Addr, string& Value);
+	bool get_stream(DWORD& Addr, vector<string> &stream);
+	bool get_xref_table();
+	bool get_trailer_pdf();
+	bool get_objects_from_xref();
+public:
+
+	string FileVersion;
+    vector<object> pdf_objects;
+    vector<string> objects; // should be deleted when the pdf_objects works perfectly
+    xref xref_obj;
+	trailer trailer_table;
+	int stream_no;
+	bool IsFound(){return FileLoaded;};
+	cPDFFile(char* szFilename);
+	cPDFFile(char* buffer,DWORD size);
+	~cPDFFile();
+	static bool identify(cFile* File);
+
+};
+
 
 //--------------------------------------//
 //--          Process Class           --//

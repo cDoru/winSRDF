@@ -103,10 +103,12 @@ cProcess::cProcess(int processId)
 		if (NULL != ProcAdd) 
 		{
 			fRunTimeLinkSuccess = TRUE;
-
+			cout << "Here\n";
+			cout << processId << "\n";
 			procHandle = (DWORD)OpenProcess(PROCESS_ALL_ACCESS , FALSE, DWORD(processId)); // setting process handle PROCESS_CREATE_THREAD | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_SUSPEND_RESUME
 			if (procHandle != NULL)
 			{
+				cout << "Here2\n";
 				__PROCESS_BASIC_INFORMATION pbi;
 				DWORD data_length = 0;
 
@@ -114,10 +116,11 @@ cProcess::cProcess(int processId)
 				ppeb = (__PEB*)pbi.PebBaseAddress;  // setting PEB address	
 				if(ppeb == NULL) return;
 				ParentID = pbi.InheritedFromUniqueProcessId;
+				cout << "Here3\n";
 				AnalyzeProcess();
+				cout << "Here4\n";
 				isFound = true;
 			}
-	       
 		}
 			
 	}

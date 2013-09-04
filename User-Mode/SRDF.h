@@ -48,6 +48,7 @@ namespace Security
 			class cFile;
 			class cPEFile;
 			class cELFFile;
+			class cPDFFile;
 			class cPcapFile;
 		}
 		namespace Memory
@@ -234,8 +235,10 @@ protected:
 	cString AppPath;
 	cString RegistryPath;
 	HKEY RegistryType;
-	void GetRequest(int argc, char *argv[]);
+	void GetRequest();
 public:
+	int argc;
+	char** argv;
 	cString AppName;
 	Mutex InstanceMutex;
 	Databases::cDatabase* Database;
